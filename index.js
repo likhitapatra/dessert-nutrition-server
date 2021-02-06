@@ -4,7 +4,6 @@ const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
 const cors = require('cors');
 
-// Some fake data
 let nutritionData = [
   {
     dessert: 'Oreo',
@@ -26,7 +25,7 @@ let nutritionData = [
   },
 ];
 
-// The GraphQL schema in string form
+// GraphQL schema
 const typeDefs = `
   type Query { nutritionData: [NutritionData] }
   type NutritionData { dessert: String, nutritionInfo: NutritionInfo }
@@ -37,7 +36,7 @@ const typeDefs = `
   }
 `;
 
-// The resolvers
+// resolvers
 const resolvers = {
   Query: { nutritionData: () => nutritionData },
   Mutation: {
@@ -63,23 +62,18 @@ const resolvers = {
   },
 };
 
-// Put together a schema
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
 });
 
-// Initialize the app
 const app = express();
 app.use(cors());
 
-// The GraphQL endpoint
 app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
 
-// GraphiQL, a visual editor for queries
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
-// Start the server
 app.listen(3000, () => {
   console.log('Go to http://localhost:3000/graphiql to run queries!');
 });
